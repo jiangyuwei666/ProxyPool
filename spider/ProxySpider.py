@@ -20,6 +20,7 @@ class ProxyMetacalss(type):
 class Spider(metaclass=ProxyMetacalss):
     """
     具体的爬虫类，爬取很多的代理网站
+    可以动态的添加*spider_*方法，爬去更多的网址
     """
     def get_proxys(self, callback):
         """

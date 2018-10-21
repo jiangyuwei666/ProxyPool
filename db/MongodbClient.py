@@ -90,6 +90,11 @@ class MongodbClient:
         result = self.db[self.name].find_one({'proxy': proxy})
         return result['_id']
 
+    def get_all(self):
+        """
+        :return: 返回数据库里所有的代理
+        """
+        return self.db[self.name].find()
 
 
 
