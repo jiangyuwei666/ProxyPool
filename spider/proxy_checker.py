@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from db.MongodbClient import  MongodbClient
+from db.mongodb_client import  MongodbClient
 import asyncio
 import aiohttp
 import time
@@ -44,7 +44,7 @@ class ProxyChecker:
 
     def run(self):
         """
-        检查的函数
+        控制检查的函数启动
         :return:
         """
         print("Checker is running")

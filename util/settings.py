@@ -19,13 +19,19 @@ INIT_SCORE = 2  # 刚加进来给2分，三次连接不上就干掉
 TEST_URL = 'http://www.baidu.com'
 
 # 检查周期
-TEST_CYCLE = 20
+CHECK_CYCLE = 20
 # 获取周期
 GET_CYCLE = 300
 
 # 能够正常使用的状态码集合
-VALID_STATUS_CODE = [200]
+VALID_STATUS_CODE = [200, 302]
 
 # 每次检测的最大代理数量
 CHECK_SIZE = 50
+
+# 开关
+CHECKER_ENABLED = True
+GETTER_ENABLED = True
+API_ENABLED = True
+
 

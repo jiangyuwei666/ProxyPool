@@ -2,7 +2,7 @@
 
 import pymongo
 from pymongo import MongoClient
-from util.settings import HOST, PORT, MAX_SCORE, INIT_SCORE, MIN_SCORE
+from util.settings import *
 
 
 class MongodbClient:

@@ -1,4 +1,4 @@
-from spider.Getter import Getter
+from spider.proxy_getter import Getter
 g = Getter()
 g.run()
 

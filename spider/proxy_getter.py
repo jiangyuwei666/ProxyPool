@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from spider.ProxySpider import Spider
-from db.MongodbClient import MongodbClient
+from spider.proxy_spider import Spider
+from db.mongodb_client import MongodbClient
 from util.settings import HOST, PORT
 import sys
 
 POOL_UP_LIMIT = 500
+
 
 class Getter:
     def __init__(self):
@@ -24,7 +25,7 @@ class Getter:
 
     def run(self):
         """
-        执行代理爬取,并放入数据库
+        控制爬虫启动，执行代理爬取,并放入数据库
         :return:
         """
         print("The Getter is running...")
