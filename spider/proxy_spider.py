@@ -33,7 +33,6 @@ class Spider(metaclass=ProxyMetacalss):
             proxies.append(proxy)
         return proxies
 
-
     def spider_daili66(self, page=3):
         """
         代理66：http://www.66ip.cn/areaindex_1/1.html

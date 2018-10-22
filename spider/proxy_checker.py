@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from db.mongodb_client import  MongodbClient
+from db.mongodb_client import MongodbClient
 import asyncio
 import aiohttp
 import time
@@ -13,19 +13,17 @@ from util.settings import *
 
 class ProxyChecker:
     def __init__(self):
-        self.db = MongodbClient('proxy', HOST, PORT)
+        self.db = MongodbClient()
 
     async def check_proxy(self, proxy):
         """
         用来异步检查代理是否可用
-        :param proxy:
+        :param proxy:传进来的是字符串
         :return:
         """
-        conn = aiohttp.TCPConnector(verify_ssl=False)  # 创建连接，不适用ssl验证
+        conn = aiohttp.TCPConnector(verify_ssl=False)  # 创建连接，不使用ssl验证
         async with aiohttp.ClientSession(connector=conn) as session:  # 异步建立会话对象（类似requests）
             try:
-                if not isinstance(proxy, str):
-                    proxy = proxy.decode('utf-8')  # 避免遇到去出来的代理数据类型错误，将其编码成字串类型
                 real_proxy = 'http://' + proxy  # 组装成可使用的IP地址
                 print('checking...', real_proxy)
                 # 用会话发送请求后获取响应response
@@ -51,16 +49,15 @@ class ProxyChecker:
         try:
             count = self.db.count()
             print("last", count, "IPs")
-            proxies = self.db.get_all()
             for i in range(0, count, CHECK_SIZE):
                 start = i
-                stop = min(CHECK_SIZE, count)  # 如果余留数小于每次的检测数，那么就以余留数作为这一次的检测数量
+                stop = min(i + CHECK_SIZE, count)  # 如果余留数小于每次的检测数，那么就以余留数作为这一次的检测数量
                 print("Checking", start + 1, '-', stop)
-                test_proxies = proxies[start, stop]  # 获取对应的代理
+                test_proxies = self.db.get_batch(start, stop)  # 获取对应的代理
                 loop = asyncio.get_event_loop()  # 开启一个“事件池”，我们可以往里面加入事件，下面两行就是往池里加任务
                 tasks = [self.check_proxy(proxy=proxy) for proxy in test_proxies]  # 制定任务：将每一条代理IP检查
                 loop.run_until_complete(asyncio.wait(tasks))  # 执行任务
-                sys.stdout.flush()
+                # sys.stdout.flush()
                 time.sleep(5)
         except Exception as e:
             print('Checker has something wrong', e.args)

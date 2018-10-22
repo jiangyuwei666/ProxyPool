@@ -14,6 +14,7 @@ def main():
         print("打开失败，再来一次")
         main()
 
+
 if __name__ == '__main__':
     print("asd")
     main()

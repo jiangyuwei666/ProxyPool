@@ -10,6 +10,7 @@ base_header = {
     'Accept-Language': 'zh-CN,zh;q=0.9'
 }
 
+
 def get_page(url, options={}):
     """
     获取代理界面的selector
@@ -27,6 +28,7 @@ def get_page(url, options={}):
         return etree.HTML(r.text)
     else:
         return None
+
 
 def get_page_no_header(url):
     print("Crawling proxy", url)

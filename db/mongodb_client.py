@@ -6,7 +6,7 @@ from util.settings import *
 
 
 class MongodbClient:
-    def __init__(self, name, host, port):
+    def __init__(self, name='proxy', host=HOST, port=PORT):
         self.name = name  # 集合名称
         self.client = MongoClient(host=host, port=port)
         self.db = self.client.proxy  # 指定数据库为proxy
@@ -61,10 +61,12 @@ class MongodbClient:
         """
         condition = {'proxy': proxy}
         result = self.db[self.name].find_one(condition)
-        if result['score'] <= 1:
-            self.db[self.name].remove({'proxy': proxy})
-        else:
+        if result and result['score'] >= 1:
             self.db[self.name].update_one(condition, {'$inc': {'score': -1}})
+            print('IP', result['proxy'], 'reduce 1 now is', result['score'] - 1)
+        else:
+            self.db[self.name].remove({'proxy': proxy})
+            print('IP', result['proxy'], 'delete')
 
     def max(self, proxy):
         """
@@ -96,6 +98,18 @@ class MongodbClient:
         """
         return self.db[self.name].find()
 
+    def get_batch(self, start, stop):
+        """
+        取某一段代理放在一个列表中
+        :param start:
+        :param stop:
+        :return:一个包含代理的列表
+        """
+        result = self.db[self.name].find()
+        proxy_batch = []
+        for i in result:
+            proxy_batch.append(i['proxy'])
+        return proxy_batch[start:stop]
 
 
 

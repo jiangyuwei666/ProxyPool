@@ -43,14 +43,16 @@ class Scheduler:
         控制整个代理池启动，开三个进程
         :return:
         """
-        if CHECKER_ENABLED:
-            checker_process = Process(target=self.scheduler_checker())
-            checker_process.start()
         if GETTER_ENABLED:
-            getter_process = Process(target=self.schedule_getter())
+            print('From Schedule:getter is running')
+            getter_process = Process(target=self.schedule_getter)
             getter_process.start()
+        if CHECKER_ENABLED:
+            checker_process = Process(target=self.scheduler_checker)
+            checker_process.start()
         if API_ENABLED:
-            api_process = Process(target=self.schedule_api())
+            print('From Schedule:api open')
+            api_process = Process(target=self.schedule_api)
             api_process.start()
 
 
