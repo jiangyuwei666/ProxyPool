@@ -28,7 +28,7 @@ class ProxyChecker:
                 print('checking...', real_proxy)
                 # 用会话发送请求后获取响应response
                 async with session.get(TEST_URL, proxy=real_proxy, timeout=15, allow_redirects=False) as response:
-                    # 检查response的状态码有咩有有效的状态吗集合里
+                    # 检查response的状态码有没有有效的状态吗集合里
                     if response in VALID_STATUS_CODE:
                         self.db.max(proxy)  # 在就记为10分
                         print("useful IP", proxy)

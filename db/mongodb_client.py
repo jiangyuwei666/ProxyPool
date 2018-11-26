@@ -3,6 +3,7 @@
 import pymongo
 from pymongo import MongoClient
 from util.settings import *
+from db.base_db import *
 
 
 class MongodbClient:
@@ -65,8 +66,10 @@ class MongodbClient:
             self.db[self.name].update_one(condition, {'$inc': {'score': -1}})
             print('IP', result['proxy'], 'reduce 1 now is', result['score'] - 1)
         else:
-            self.db[self.name].remove({'proxy': proxy})
-            print('IP', result['proxy'], 'delete')
+            if result:
+                print('IP', result['proxy'], 'delete')
+                self.db[self.name].remove({'proxy': proxy})
+
 
     def max(self, proxy):
         """

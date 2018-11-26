@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from util.get_selector import get_page
-from util.get_selector import get_page_no_header as gpnh  # 有的网址很贱，不加请求头反而还能让你用
+from util.requests import Request
+
 
 class ProxyMetacalss(type):
     """
     自定义元类
     """
+
     def __new__(cls, name, bases, attrs):
         count = 0
         attrs['__SpiderFunc__'] = []
@@ -17,11 +18,16 @@ class ProxyMetacalss(type):
         attrs['__SpiderFuncCount__'] = count
         return type.__new__(cls, name, bases, attrs)
 
+
 class Spider(metaclass=ProxyMetacalss):
     """
     具体的爬虫类，爬取很多的代理网站
     可以动态的添加*spider_*方法，爬去更多的网址
     """
+
+    def __init__(self):
+        self.selector = Request()
+
     def get_proxys(self, callback):
         """
         用反射调用所有的“spider_xxxx”方法
@@ -40,7 +46,7 @@ class Spider(metaclass=ProxyMetacalss):
         """
         for per_page in range(1, page):
             url = "http://www.66ip.cn/areaindex_{page}/1.html".format(page=per_page)
-            s = gpnh(url)
+            s = self.selector.get_page_without_header(url=url)
             if s is not None:
                 print("Crawling", url)
                 ip = s.xpath('//tr[1]/following-sibling::*/td[1]/text()')
@@ -66,7 +72,7 @@ class Spider(metaclass=ProxyMetacalss):
         :return:
         """
         url = "https://www.kuaidaili.com/free/inha/"
-        s = get_page(url)
+        s = self.selector.get_page(url=url)
         if s is not None:
             print("Crawling", url)
             ip = s.xpath('//td[@data-title="IP"]/text()')
@@ -81,7 +87,7 @@ class Spider(metaclass=ProxyMetacalss):
         """
         for per_page in range(2):
             url = "http://www.swei360.com/free/?page={page}".format(page=per_page + 1)
-            s = get_page(url)
+            s = self.selector.get_page(url=url)
             if s is not None:
                 ip = s.xpath('//tr/td[1]/text()')
                 port = s.xpath('//tr/td[2]/text()')
@@ -95,12 +101,9 @@ class Spider(metaclass=ProxyMetacalss):
         """
         for per_page in range(2):
             url = "http://www.ip3366.net/free/?stype=1&page={page}".format(page=per_page + 1)
-            s = get_page(url)
+            s = self.selector.get_page(url=url)
             if s is not None:
                 ip = s.xpath('//tr/td[1]/text()')
                 port = s.xpath('//tr/td[2]/text()')
                 for i in range(len(ip)):
                     yield ip[i] + ':' + port[i]
-
-
-

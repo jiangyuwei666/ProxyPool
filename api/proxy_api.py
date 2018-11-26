@@ -24,7 +24,7 @@ def index():
 @app.route('/get_proxy')
 def get_proxy():
     conn = get_conn()
-    return conn.db.get()
+    return conn.db.get()['proxy']
 
 
 @app.route('/get_all')
