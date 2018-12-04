@@ -39,13 +39,13 @@ class MongodbClient:
         :return:
         """
         if self.db[self.name].find_one({'score': MAX_SCORE}) is not None:
-            return self.db[self.name].find_one({'score': MAX_SCORE})
+            return self.db[self.name].find_one({'score': MAX_SCORE})[0]
         elif self.db[self.name].find_one({'score': {'$gt': 5}}):
-            return self.db[self.name].find({'score': {'$gt': 5}}).sort('score', pymongo.DESCENDING).limit(1)
+            return self.db[self.name].find({'score': {'$gt': 5}}).sort('score', pymongo.DESCENDING).limit(1)[0]
         elif self.db[self.name].find_one({'score': {'$gt': 3}}):
-            return self.db[self.name].find({'score': {'$gt': 3}}).sort('score', pymongo.DESCENDING).limit(1)
+            return self.db[self.name].find({'score': {'$gt': 3}}).sort('score', pymongo.DESCENDING).limit(1)[0]
         else:
-            return self.db[self.name].find().sort('score', pymongo.DESCENDING).limit(1)
+            return self.db[self.name].find().sort('score', pymongo.DESCENDING).limit(1)[0]
 
     # def delete(self, proxy):
     #     """
@@ -99,7 +99,10 @@ class MongodbClient:
         """
         :return: 返回数据库里所有的代理
         """
-        return self.db[self.name].find()
+        all_proxies = []
+        for i in self.db[self.name].find():
+            all_proxies.append(i['proxy'])
+        return str(all_proxies)
 
     def get_batch(self, start, stop):
         """

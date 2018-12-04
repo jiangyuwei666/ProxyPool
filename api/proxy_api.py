@@ -11,9 +11,11 @@ def get_conn():
     连接数据库
     :return:
     """
-    if not hasattr(g, 'mongodb'):
-        g.mongodb = MongodbClient('proxy_pool', HOST, PORT)
-    return g.mongodb
+    # if not hasattr(g, 'mongodb'):
+    #     g.mongodb = MongodbClient('proxy', HOST, PORT)
+    # return g.mongodb
+    connection = MongodbClient()
+    return connection
 
 
 @app.route('/')
@@ -21,16 +23,16 @@ def index():
     return "<h2>小蒋娃的代理池</h2>"
 
 
-@app.route('/get_proxy')
+@app.route('/get_proxy/')
 def get_proxy():
     conn = get_conn()
-    return conn.db.get()['proxy']
+    return str(conn.get()['proxy'])
 
 
-@app.route('/get_all')
+@app.route('/get_all/')
 def get_all():
     conn = get_conn()
-    return conn.db.get_all()
+    return conn.get_all()
 
 
 # if __name__ == '__main__':
